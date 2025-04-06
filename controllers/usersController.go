@@ -36,10 +36,13 @@ func isValidEmail(email string) bool {
 // @Router /signup [post]
 func SignUp(c *gin.Context) {
 	var body struct {
-		Email    string
-		Password string
-		Name     string
-		PhotoUrl string
+		Email        string
+		Password     string
+		PhotoUrl     string
+		Name         string
+		Surname      string
+		Subscription string
+		Balance      float64
 	}
 
 	if err := c.Bind(&body); err != nil {
@@ -74,10 +77,13 @@ func SignUp(c *gin.Context) {
 
 	// Создание пользователя
 	user := models.User{
-		Email:    body.Email,
-		Password: string(hash),
-		PhotoUrl: &body.PhotoUrl,
-		Name:     &body.Name,
+		Email:        body.Email,
+		Password:     string(hash),
+		PhotoUrl:     &body.PhotoUrl,
+		Name:         &body.Name,
+		Surname:      &body.Surname,
+		Subscription: &body.Subscription,
+		Balance:      &body.Balance,
 	}
 
 	result := initializers.DB.Create(&user)
@@ -214,10 +220,10 @@ func Validate(c *gin.Context) {
 		ID:        realUser.ID,
 		CreatedAt: realUser.CreatedAt,
 		UpdatedAt: realUser.UpdatedAt,
-		DeletedAt: getSafeDeletedAt(realUser.DeletedAt), // Используем вспомогательную функцию
+		DeletedAt: getSafeDeletedAt(realUser.DeletedAt),
 		Email:     realUser.Email,
-		PhotoUrl:  safeString(realUser.PhotoUrl), // Используем безопасное получение строки
-		Name:      safeString(realUser.Name),     // Используем безопасное получение строки
+		PhotoUrl:  safeString(realUser.PhotoUrl),
+		Name:      safeString(realUser.Name),
 	}
 
 	c.JSON(http.StatusOK, gin.H{
@@ -360,10 +366,13 @@ func EditUser(c *gin.Context) {
 
 	// спарсить
 	var body struct {
-		Email    *string `json:"email"`
-		Password *string `json:"password"`
-		PhotoUrl *string `json:"photoUrl"`
-		Name     *string `json:"name"`
+		Email        *string  `json:"email"`
+		Password     *string  `json:"password"`
+		PhotoUrl     *string  `json:"photoUrl"`
+		Name         *string  `json:"name"`
+		Surname      *string  `json:"Surname"`
+		Subscription *string  `json:"subscription"`
+		Balance      *float64 `json:"balance"`
 	}
 
 	if err := c.BindJSON(&body); err != nil {
@@ -406,6 +415,18 @@ func EditUser(c *gin.Context) {
 	// имя
 	if body.Name != nil {
 		updates["Name"] = *body.Name
+	}
+
+	if body.Surname != nil {
+		updates["Surname"] = *body.Surname
+	}
+
+	if body.Subscription != nil {
+		updates["Subscription"] = *body.Subscription
+	}
+
+	if body.Balance != nil {
+		updates["Balance"] = *body.Balance
 	}
 
 	// закинуть в бд

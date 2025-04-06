@@ -11,5 +11,8 @@ type User struct {
 	Password     string
 	PhotoUrl     *string
 	Name         *string
+	Surname      *string
+	Subscription *string
+	Balance      *float64
 	RefreshToken *string
 }

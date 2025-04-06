@@ -9,6 +9,7 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -28,6 +29,7 @@ func init() {
 // @BasePath /
 func main() {
 	r := gin.Default()
+	r.Use(cors.Default())
 
 	r.POST("/signup", controllers.SignUp)
 	r.POST("/login", controllers.Login)
