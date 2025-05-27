@@ -416,15 +416,15 @@ func EditUser(c *gin.Context) {
 	if body.Name != nil {
 		updates["Name"] = *body.Name
 	}
-
+	//фамилия
 	if body.Surname != nil {
 		updates["Surname"] = *body.Surname
 	}
-
+	//подписка
 	if body.Subscription != nil {
 		updates["Subscription"] = *body.Subscription
 	}
-
+	//баланс
 	if body.Balance != nil {
 		updates["Balance"] = *body.Balance
 	}
